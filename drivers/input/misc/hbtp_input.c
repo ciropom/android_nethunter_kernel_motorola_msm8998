@@ -190,6 +190,17 @@ static int fb_notifier_callback(struct notifier_block *self,
 }
 #endif
 
+struct pinctrl_state *pinctrl_lookup_state(struct pinctrl *p, const char *name)
+{
+     struct pinctrl_state *s;
+ 
+     mutex_lock(&hbtp->sensormutex);
+     s = pinctrl_lookup_state_locked(p, name);
+     mutex_unlock(&hbtp->sensormutex);
+ 
+    return s;
+}
+
 static ssize_t hbtp_sensor_roi_show(struct file *dev, struct kobject *kobj,
 		struct bin_attribute *attr, char *buf, loff_t pos,
 			size_t size) {

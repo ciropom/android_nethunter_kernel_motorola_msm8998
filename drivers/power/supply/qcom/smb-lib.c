@@ -7874,10 +7874,22 @@ static void warn_irq_w(struct work_struct *work)
 
 	int warn_line = gpio_get_value(chg->mmi.warn_gpio.gpio);
 	u8 stat;
+	u8 qpnp_pon_key_status; /*DT*/
+	int rc;
 	bool vbus_rising;
 
 	if (!warn_line) {
 		smblib_dbg(chg, PR_MOTO, "HW User Reset! 2 sec to Reset\n");
+		
+		/*DT*/
+		rc = smblib_read(chg, (CHGR_BASE + INT_RT_STS_OFFSET), &stat);
+        	if (rc < 0) {
+                	smblib_err(chg, "Couldn't read INT_RT_STS_OFFSET rc=%d\n",
+                	        rc);
+                	return;
+        	}
+	        qpnp_pon_key_status = stat;
+		/*DT*/
 
 		/* trigger wdog if resin key pressed */
 		if (qpnp_pon_key_status & QPNP_PON_KEY_RESIN_BIT) {
