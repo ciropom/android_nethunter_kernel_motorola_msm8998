@@ -1,0 +1,12 @@
+export PATH="/home/ciropom/android/lineage/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin:${PATH}"
+export CROSS_COMPILE="aarch64-linux-android-"
+make mrproper 
+
+make ARCH="arm64" cirokali_payton_defconfig
+
+make ARCH="arm64" menuconfig 
+make ARCH="arm64" savedefconfig
+
+cp defconfig arch/arm64/configs/cirokali_payton_defconfig
+
+make -j3 V=1 ARCH="arm64" zImage dtbs
